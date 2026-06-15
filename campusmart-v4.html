@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusMart — UCC</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#FF5C00;--bs:#FFF0E8;--food:#16A34A;--fs:#DCFCE7;--dark:#0F0F0F;--mid:#3D3D3D;--muted:#888;--border:#E8E8E8;--surface:#F7F7F7;--white:#fff;--r:16px;--rsm:10px;--sh:0 1px 8px rgba(0,0,0,.07);--shm:0 4px 24px rgba(0,0,0,.11);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--surface);color:var(--dark);min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:72px;}
+/* TOPBAR */
+.topbar{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:90;}
+.tbi{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:58px;}
+.logo{font-family:'Fraunces',serif;font-weight:900;font-size:22px;color:var(--dark);}
+.logo sup{font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;background:var(--brand);color:white;padding:2px 6px;border-radius:4px;vertical-align:super;margin-left:3px;}
+.tr{display:flex;align-items:center;gap:8px;}
+.btn-auth{display:flex;align-items:center;gap:6px;background:var(--dark);color:white;border:none;padding:9px 16px;border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
+.user-pill{display:none;align-items:center;gap:8px;}
+.up-av{width:32px;height:32px;border-radius:50%;background:var(--brand);color:white;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.up-name{font-size:13px;font-weight:700;}
+.up-role{font-size:11px;color:var(--muted);}
+.btn-post-top{background:var(--brand);color:white;border:none;padding:8px 14px;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
+.btn-logout{background:none;border:1.5px solid var(--border);padding:6px 12px;border-radius:50px;font-size:12px;font-weight:600;cursor:pointer;color:var(--mid);font-family:'Plus Jakarta Sans',sans-serif;}
+/* MODE TABS */
+.modetabs{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:58px;z-index:89;}
+.modetabs-inner{max-width:900px;margin:0 auto;display:flex;padding:0 16px;}
+.mtab{padding:13px 20px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2.5px solid transparent;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif;}
+.mtab.active{color:var(--dark);border-bottom-color:var(--brand);}
+.mtab.food.active{color:var(--food);border-bottom-color:var(--food);}
+/* PAGES */
+.page{display:none;} .page.active{display:block;}
+/* HERO */
+.hero{max-width:900px;margin:0 auto;padding:24px 16px 0;}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(26px,5vw,40px);font-weight:900;line-height:1.15;}
+.hero h1 em{color:var(--brand);font-style:italic;}
+.hero h1 em.food{color:var(--food);}
+.hero p{font-size:14px;color:var(--muted);margin:4px 0 14px;}
+.sbox{position:relative;}
+.sbox input{width:100%;padding:13px 16px 13px 42px;border:1.5px solid var(--border);border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;background:var(--white);outline:none;transition:border-color .15s;}
+.sbox input:focus{border-color:var(--brand);}
+.sbox .si{position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;}
+/* STATS */
+.stats{max-width:900px;margin:14px auto 0;padding:0 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
+.stats::-webkit-scrollbar{display:none;}
+.stat{background:var(--white);border:1px solid var(--border);border-radius:50px;padding:5px 13px;font-size:12px;font-weight:600;white-space:nowrap;color:var(--mid);}
+.stat b{color:var(--brand);}
+/* CATS */
+.cats{max-width:900px;margin:14px auto 0;padding:0 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
+.cats::-webkit-scrollbar{display:none;}
+.cat{padding:7px 14px;border-radius:50px;border:1.5px solid var(--border);background:var(--white);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;color:var(--mid);font-family:'Plus Jakarta Sans',sans-serif;}
+.cat.active{background:var(--brand);border-color:var(--brand);color:white;}
+.cat.food.active{background:var(--food);border-color:var(--food);color:white;}
+/* VENDOR BANNER */
+.vbanner{max-width:900px;margin:16px auto 0;padding:0 16px;}
+.vbi{background:linear-gradient(135deg,#14532D,#16A34A);border-radius:var(--r);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.vbi h3{font-family:'Fraunces',serif;font-weight:900;font-size:17px;color:white;margin-bottom:2px;}
+.vbi p{font-size:12px;color:rgba(255,255,255,.75);}
+.btn-vendor{background:white;color:var(--food);border:none;padding:8px 14px;border-radius:50px;font-weight:700;font-size:13px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
+/* SECTION LABEL */
+.slabel{max-width:900px;margin:18px auto 10px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;}
+.slabel h2{font-size:15px;font-weight:700;}
+.slabel span{font-size:12px;color:var(--muted);}
+/* GRID */
+.grid{max-width:900px;margin:0 auto;padding:0 16px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+@media(min-width:540px){.grid{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr);}}
+/* MARKET CARD */
+.mcard{background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;}
+.mcard:hover{transform:translateY(-3px);box-shadow:var(--shm);}
+.mcard.feat{outline:2px solid var(--brand);}
+.mcard-img{width:100%;aspect-ratio:1;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden;}
+.mcard-img img{width:100%;height:100%;object-fit:cover;}
+.mcard-body{padding:10px 12px 12px;}
+.mprice{font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:var(--brand);}
+.mname{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:2px 0 4px;}
+.mmeta{font-size:11px;color:var(--muted);}
+.bfeat{position:absolute;top:8px;right:8px;background:var(--brand);color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:50px;}
+.bcond{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.5);color:white;font-size:10px;padding:2px 8px;border-radius:50px;}
+/* FOOD CARD */
+.fcard{background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.fcard:hover{transform:translateY(-3px);box-shadow:var(--shm);}
+.fcard-img{width:100%;aspect-ratio:4/3;background:var(--fs);display:flex;align-items:center;justify-content:center;font-size:44px;overflow:hidden;}
+.fcard-img img{width:100%;height:100%;object-fit:cover;}
+.fcard-body{padding:10px 12px 12px;}
+.fvendor{font-size:10px;font-weight:700;color:var(--food);text-transform:uppercase;letter-spacing:.5px;}
+.fname{font-size:13px;font-weight:700;margin:2px 0 3px;}
+.fprice{font-family:'Fraunces',serif;font-weight:700;font-size:16px;color:var(--food);}
+.favail{font-size:10px;color:var(--muted);margin-top:2px;}
+/* EMPTY */
+.empty{grid-column:1/-1;text-align:center;padding:52px 20px;}
+.ei{font-size:48px;margin-bottom:10px;}
+.empty h3{font-size:16px;font-weight:700;margin-bottom:5px;}
+.empty p{font-size:13px;color:var(--muted);}
+/* BNAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);display:flex;z-index:90;}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 0;gap:3px;cursor:pointer;color:var(--muted);font-size:10px;font-weight:600;border:none;background:none;font-family:'Plus Jakarta Sans',sans-serif;transition:color .15s;}
+.bnav-btn.active{color:var(--brand);}
+.bnav-btn svg{width:22px;height:22px;stroke-width:2;}
+/* OVERLAYS */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;backdrop-filter:blur(3px);}
+.ov.open{display:flex;}
+.sheet{background:var(--white);border-radius:24px 24px 0 0;width:100%;max-height:94vh;overflow-y:auto;padding:20px 20px 36px;animation:up .25s cubic-bezier(.32,1,.6,1);}
+@keyframes up{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px;}
+.stitle{font-family:'Fraunces',serif;font-weight:900;font-size:22px;color:var(--dark);margin-bottom:18px;}
+/* AUTH SHEET */
+.auth-tabs{display:flex;border:1.5px solid var(--border);border-radius:50px;margin-bottom:18px;overflow:hidden;}
+.atab{flex:1;padding:9px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);border:none;background:none;font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;}
+.atab.active{background:var(--dark);color:white;border-radius:50px;}
+.auth-sw{text-align:center;font-size:12px;color:var(--muted);margin-top:12px;}
+.auth-sw span{color:var(--brand);cursor:pointer;font-weight:600;}
+/* ROLE PICK */
+.rpick{display:flex;gap:8px;margin-bottom:14px;}
+.ropt{flex:1;position:relative;}
+.ropt input{display:none;}
+.ropt label{display:block;padding:11px 8px;border:2px solid var(--border);border-radius:var(--rsm);text-align:center;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s;color:var(--mid);}
+.ropt input:checked+label{border-color:var(--brand);background:var(--bs);color:var(--brand);}
+.ricon{display:block;font-size:20px;margin-bottom:3px;}
+/* FORM */
+.fg{margin-bottom:13px;}
+.fl{display:block;font-size:11px;font-weight:700;color:var(--mid);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
+.fi,.fs,.fta{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--rsm);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--dark);background:var(--white);outline:none;transition:border-color .15s;}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--brand);}
+.fta{resize:vertical;min-height:72px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn-main{width:100%;padding:14px;border:none;border-radius:50px;font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:white;cursor:pointer;background:var(--brand);transition:opacity .15s;margin-top:4px;}
+.btn-main:hover{opacity:.88;}
+.btn-main:disabled{opacity:.5;cursor:not-allowed;}
+.btn-main.food{background:var(--food);}
+/* POST MODAL */
+.type-toggle{display:flex;gap:8px;margin-bottom:16px;}
+.tbtn{flex:1;padding:10px;border-radius:var(--rsm);border:1.5px solid var(--border);background:var(--white);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--mid);}
+.tbtn.active{border-color:var(--brand);background:var(--bs);color:var(--brand);}
+.tbtn.food.active{border-color:var(--food);background:var(--fs);color:var(--food);}
+.photo-drop{border:2px dashed var(--border);border-radius:var(--rsm);padding:20px;text-align:center;cursor:pointer;transition:border-color .15s;}
+.photo-drop:hover{border-color:var(--brand);}
+.photo-drop p{font-size:13px;color:var(--muted);margin-top:4px;}
+#img-prev,#fimg-prev{display:none;width:100%;border-radius:var(--rsm);margin-top:10px;max-height:180px;object-fit:cover;}
+/* DETAIL */
+.dsheet{background:var(--white);border-radius:24px 24px 0 0;width:100%;max-height:94vh;overflow-y:auto;animation:up .25s cubic-bezier(.32,1,.6,1);}
+.dimg{width:100%;aspect-ratio:4/3;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:72px;overflow:hidden;}
+.dimg img{width:100%;height:100%;object-fit:cover;}
+.dbody{padding:20px;}
+.dprice{font-family:'Fraunces',serif;font-weight:900;font-size:30px;color:var(--brand);}
+.dprice.food{color:var(--food);}
+.dname{font-size:18px;font-weight:700;margin:4px 0 10px;}
+.dtags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.tag{background:var(--surface);border:1px solid var(--border);padding:4px 11px;border-radius:50px;font-size:11px;font-weight:600;color:var(--mid);}
+.tag.feat{background:var(--bs);color:var(--brand);border-color:var(--brand);}
+.ddesc{font-size:14px;color:var(--mid);line-height:1.65;margin-bottom:14px;}
+.srow{background:var(--surface);border-radius:var(--rsm);padding:13px;display:flex;gap:12px;align-items:center;margin-bottom:14px;}
+.av{width:40px;height:40px;border-radius:50%;background:var(--brand);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;}
+.av.food{background:var(--food);}
+.av-name{font-size:14px;font-weight:700;}
+.av-sub{font-size:12px;color:var(--muted);}
+.mine-actions{display:flex;gap:8px;margin-bottom:10px;}
+.btn-del{flex:1;padding:12px;border-radius:50px;border:1.5px solid #FECACA;background:#FEF2F2;color:#DC2626;font-weight:700;font-size:13px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
+.btn-edit{flex:1;padding:12px;border-radius:50px;border:1.5px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;font-weight:700;font-size:13px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
+.btn-feat{flex:1;padding:12px;border-radius:50px;border:1.5px solid #FDE68A;background:#FFFBEB;color:#B45309;font-weight:700;font-size:13px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
+.btn-order{width:100%;padding:15px;border:none;border-radius:50px;background:var(--brand);color:white;font-family:'Fraunces',serif;font-size:17px;font-weight:700;cursor:pointer;margin-bottom:10px;}
+.btn-wa{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:50px;background:#25D366;color:white;font-family:'Fraunces',serif;font-size:16px;font-weight:700;text-decoration:none;}
+.close-x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.38);border:none;color:white;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);z-index:5;}
+.ovwrap{position:relative;width:100%;}
+/* ORDER */
+.oinfo{background:var(--surface);border-radius:var(--rsm);padding:16px;margin-bottom:14px;}
+.oir{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.oir:last-child{margin-bottom:0;}
+.oil{font-size:12px;color:var(--muted);}
+.oiv{font-size:14px;font-weight:700;}
+.momo-box{background:var(--bs);border:2px solid var(--brand);border-radius:var(--rsm);padding:16px;margin-bottom:14px;text-align:center;}
+.momo-box h3{font-family:'Fraunces',serif;font-size:18px;font-weight:900;color:var(--brand);margin-bottom:2px;}
+.momo-num{font-size:22px;font-weight:800;color:var(--dark);letter-spacing:1px;margin:6px 0;}
+.momo-note{font-size:12px;color:var(--mid);}
+.esteps h4{font-size:13px;font-weight:700;margin-bottom:10px;}
+.estep{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;}
+.estep-n{width:22px;height:22px;border-radius:50%;background:var(--brand);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.estep-t{font-size:13px;color:var(--mid);line-height:1.5;}
+/* DASHBOARD */
+.dash-wrap{max-width:900px;margin:0 auto;padding:24px 16px;}
+.dash-title{font-family:'Fraunces',serif;font-weight:900;font-size:24px;margin-bottom:3px;}
+.dash-sub{font-size:13px;color:var(--muted);margin-bottom:18px;}
+.dsec{font-size:14px;font-weight:700;margin:18px 0 10px;}
+.dcard{background:var(--white);border-radius:var(--rsm);padding:14px;margin-bottom:10px;box-shadow:var(--sh);}
+.dctop{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.dcname{font-size:14px;font-weight:700;}
+.dcsub{font-size:12px;color:var(--muted);margin-top:2px;}
+.dcprice{font-family:'Fraunces',serif;font-weight:700;font-size:18px;color:var(--brand);}
+.dcst{font-size:12px;font-weight:600;padding:4px 10px;border-radius:50px;display:inline-block;margin-bottom:8px;background:var(--surface);}
+.dcst.payment_pending{background:#FFF7ED;color:#C2410C;}
+.dcst.dropped_off{background:#EFF6FF;color:#1D4ED8;}
+.dcst.completed{background:#F0FDF4;color:#15803D;}
+.dcst.disputed{background:#FEF2F2;color:#DC2626;}
+.dc-section{font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.5px;}
+.btn-recv,.btn-drop{width:100%;padding:10px;border-radius:50px;border:none;color:white;font-weight:700;font-size:13px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
+.btn-recv{background:var(--food);}
+.btn-drop{background:var(--brand);}
+.btn-disp{width:100%;padding:10px;border-radius:50px;border:1.5px solid #FECACA;background:#FEF2F2;color:#DC2626;font-weight:700;font-size:13px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-top:6px;}
+.btn-del-sm{background:#FEF2F2;border:none;padding:6px 10px;border-radius:50px;color:#DC2626;font-size:13px;cursor:pointer;}
+.ltxt,.edash{font-size:13px;color:var(--muted);text-align:center;padding:24px;}
+/* TOAST */
+.toast{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);background:var(--dark);color:white;padding:11px 20px;border-radius:50px;font-size:13px;font-weight:600;z-index:999;opacity:0;pointer-events:none;transition:opacity .25s;white-space:nowrap;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tbi">
+    <div class="logo">CampusMart<sup>UCC</sup></div>
+    <div class="tr">
+      <button class="btn-auth" id="btn-auth">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Sign In / Sign Up
+      </button>
+      <div class="user-pill" id="user-pill">
+        <div class="up-av" id="up-av">?</div>
+        <div><div class="up-name" id="up-name"></div><div class="up-role" id="up-role"></div></div>
+        <button class="btn-post-top" id="btn-post-top">+ Post</button>
+        <button class="btn-logout" id="btn-logout">Sign out</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODE TABS -->
+<div class="modetabs">
+  <div class="modetabs-inner">
+    <button class="mtab active" id="tab-market">🛍️ Marketplace</button>
+    <button class="mtab food" id="tab-food">🍱 Food</button>
+  </div>
+</div>
+
+<!-- BROWSE PAGE -->
+<div class="page active" id="ap-browse">
+  <div class="hero">
+    <h1 id="hero-h">Buy & Sell<br><em>on campus</em></h1>
+    <p id="hero-p">UCC's student marketplace — books, gadgets & more</p>
+    <div class="sbox"><span class="si">🔍</span><input type="text" id="app-search" placeholder="Search listings…"></div>
+  </div>
+  <div class="stats">
+    <div class="stat">📦 <b id="s-items">6</b> items</div>
+    <div class="stat">👤 <b id="s-sellers">5</b> sellers</div>
+    <div class="stat">🍱 <b id="s-foods">4</b> food items</div>
+    <div class="stat">📍 UCC Campus</div>
+    <div class="stat">🟢 Live</div>
+  </div>
+  <div class="cats" id="cats-row"></div>
+  <div id="vendor-banner" style="display:none" class="vbanner">
+    <div class="vbi">
+      <div><h3>Sell food on campus</h3><p>Register as a vendor — reach hundreds of students</p></div>
+      <button class="btn-vendor" id="btn-vendor">Register →</button>
+    </div>
+  </div>
+  <div id="feat-section" style="display:none">
+    <div class="slabel"><h2>⭐ Featured</h2><span>Promoted listings</span></div>
+    <div class="grid" id="feat-grid"></div>
+  </div>
+  <div class="slabel"><h2 id="grid-title">All Listings</h2><span id="grid-count"></span></div>
+  <div class="grid" id="main-grid"></div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div class="page" id="ap-dash">
+  <div class="dash-wrap">
+    <div class="dash-title">Dashboard</div>
+    <div class="dash-sub">Your orders, listings & sales</div>
+    <div class="dsec">📦 My Orders</div>
+    <div id="dash-orders"><p class="ltxt">Sign in to see your orders</p></div>
+    <div class="dsec">🛍️ My Listings & Sales</div>
+    <div id="dash-listings"><p class="ltxt">Sign in to see your listings</p></div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <button class="bnav-btn active" id="bnav-browse">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Browse
+  </button>
+  <button class="bnav-btn" id="bnav-post">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Post
+  </button>
+  <button class="bnav-btn" id="bnav-dash">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard
+  </button>
+</nav>
+
+<!-- AUTH MODAL -->
+<div class="ov" id="auth-ov">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="stitle" id="auth-title">Welcome back 👋</div>
+    <div class="auth-tabs" id="auth-tabs">
+      <button class="atab active" id="atab-login">Sign In</button>
+      <button class="atab" id="atab-signup">Sign Up</button>
+    </div>
+    <!-- LOGIN -->
+    <div id="f-login">
+      <div class="fg"><label class="fl">Email</label><input class="fi" id="li-email" type="email" placeholder="your@email.com"></div>
+      <div class="fg"><label class="fl">Password</label><input class="fi" id="li-pass" type="password" placeholder="••••••••"></div>
+      <button class="btn-main" id="btn-login">Sign In →</button>
+      <p class="auth-sw">No account? <span id="go-signup">Sign Up</span></p>
+    </div>
+    <!-- SIGNUP -->
+    <div id="f-signup" style="display:none">
+      <div class="fg"><label class="fl">I am a…</label>
+        <div class="rpick">
+          <div class="ropt"><input type="radio" name="role" id="r-buyer" value="buyer" checked><label for="r-buyer"><span class="ricon">🛒</span>Buyer</label></div>
+          <div class="ropt"><input type="radio" name="role" id="r-seller" value="seller"><label for="r-seller"><span class="ricon">🛍️</span>Seller</label></div>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" id="su-email" type="email" placeholder="your@email.com"></div>
+      <div class="fg"><label class="fl">Password (min 6 chars)</label><input class="fi" id="su-pass" type="password" placeholder="••••••••"></div>
+      <button class="btn-main" id="btn-signup">Create Account →</button>
+      <p class="auth-sw">Have an account? <span id="go-login">Sign In</span></p>
+    </div>
+    <!-- COMPLETE PROFILE -->
+    <div id="f-profile" style="display:none">
+      <div class="fg"><label class="fl">Full name *</label><input class="fi" id="cp-name" type="text" placeholder="Your full name"></div>
+      <div class="fg"><label class="fl">Student ID *</label><input class="fi" id="cp-sid" type="text" placeholder="e.g. UCC/SCI/21/0001" maxlength="15"></div>
+      <div class="fg"><label class="fl">Hall / Hostel *</label>
+        <select class="fs" id="cp-hall">
+          <option value="">Select your hall…</option>
+          <option>Casely Hayford Hall</option><option>Oguaa Hall</option><option>ATL Hall</option>
+          <option>Adehye Hall</option><option>Valco Hall</option><option>Kwame Nkrumah Hall</option>
+          <option>Off-Campus</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">WhatsApp number *</label><input class="fi" id="cp-phone" type="tel" placeholder="0241234567"></div>
+      <div class="fg"><label class="fl">I am a…</label>
+        <div class="rpick">
+          <div class="ropt"><input type="radio" name="cp-role" id="cr-buyer" value="buyer" checked><label for="cr-buyer"><span class="ricon">🛒</span>Buyer</label></div>
+          <div class="ropt"><input type="radio" name="cp-role" id="cr-seller" value="seller"><label for="cr-seller"><span class="ricon">🛍️</span>Seller</label></div>
+        </div>
+      </div>
+      <button class="btn-main" id="btn-saveprofile">Save & Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- POST MODAL -->
+<div class="ov" id="post-ov">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="stitle" id="post-title">Post a Listing</div>
+    <div class="type-toggle">
+      <button class="tbtn active" id="pt-market">🛍️ Item for Sale</button>
+      <button class="tbtn food" id="pt-food">🍱 Food Item</button>
+    </div>
+    <div id="f-market">
+      <div class="fg"><label class="fl">Item name *</label><input class="fi" id="m-name" type="text" placeholder="e.g. Chemistry Textbook"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Price (GHS) *</label><input class="fi" id="m-price" type="number" placeholder="0.00"></div>
+        <div class="fg"><label class="fl">Category *</label>
+          <select class="fs" id="m-cat"><option value="">Select…</option><option>Textbooks</option><option>Electronics</option><option>Clothing</option><option>Stationery</option><option>Services</option><option>Other</option></select>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Condition</label>
+          <select class="fs" id="m-cond"><option>New</option><option>Like New</option><option>Good</option><option>Fair</option></select>
+        </div>
+        <div class="fg"><label class="fl">Drop-off Point *</label>
+          <select class="fs" id="m-drop"><option value="">Select…</option></select>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Description</label><textarea class="fta" id="m-desc" placeholder="Details, pickup info…"></textarea></div>
+      <div class="fg"><label class="fl">Photo</label>
+        <div class="photo-drop" id="m-photo-drop"><div style="font-size:26px">📷</div><p>Tap to upload</p><input type="file" id="m-img" accept="image/*" style="display:none"></div>
+        <img id="img-prev" alt="">
+      </div>
+      <button class="btn-main" id="btn-post-market">Post Listing →</button>
+    </div>
+    <div id="f-food" style="display:none">
+      <div class="fg"><label class="fl">Food item name *</label><input class="fi" id="f-name" type="text" placeholder="e.g. Jollof Rice & Chicken"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Price (GHS) *</label><input class="fi" id="f-price" type="number" placeholder="0.00"></div>
+        <div class="fg"><label class="fl">Food type</label>
+          <select class="fs" id="f-cat"><option>Rice dishes</option><option>Soups & Stews</option><option>Snacks</option><option>Drinks</option><option>Pastries</option><option>Other</option></select>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Vendor / Stall name *</label><input class="fi" id="f-vendor" type="text" placeholder="e.g. Mama Ama's Kitchen"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Available hours</label><input class="fi" id="f-hours" placeholder="e.g. 11am–6pm"></div>
+        <div class="fg"><label class="fl">Location / Drop-off *</label>
+          <select class="fs" id="f-drop"><option value="">Select…</option></select>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Description</label><textarea class="fta" id="f-desc" placeholder="What's special?"></textarea></div>
+      <div class="fg"><label class="fl">Photo</label>
+        <div class="photo-drop" id="f-photo-drop"><div style="font-size:26px">📸</div><p>Tap to upload</p><input type="file" id="f-img" accept="image/*" style="display:none"></div>
+        <img id="fimg-prev" alt="">
+      </div>
+      <button class="btn-main food" id="btn-post-food">Post Food Item →</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="ov" id="det-ov">
+  <div class="ovwrap">
+    <button class="close-x" id="btn-close-det">✕</button>
+    <div class="dsheet" id="det-content"></div>
+  </div>
+</div>
+
+<!-- ORDER MODAL -->
+<div class="ov" id="order-ov">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="stitle">🔒 Secure Escrow Order</div>
+    <div class="oinfo">
+      <div class="oir"><span class="oil">Item</span><span class="oiv" id="ord-item"></span></div>
+      <div class="oir"><span class="oil">Item price</span><span class="oiv" id="ord-price"></span></div>
+      <div class="oir"><span class="oil">Service fee</span><span class="oiv" id="ord-commission" style="color:var(--brand)"></span></div>
+      <div class="oir" style="border-top:1.5px solid var(--border);padding-top:8px;margin-top:4px"><span class="oil" style="font-weight:700;color:var(--dark)">Total to pay</span><span class="oiv" id="ord-total" style="color:var(--brand);font-size:18px"></span></div>
+      <div class="oir"><span class="oil">Drop-off</span><span class="oiv" id="ord-drop"></span></div>
+      <div class="oir"><span class="oil">Reference</span><span class="oiv" id="ord-ref" style="color:var(--brand)"></span></div>
+    </div>
+    <div class="momo-box" style="background:#F0FDF4;border-color:#16A34A">
+      <h3 style="color:#16A34A">🔒 Secure Payment</h3>
+      <div style="font-size:13px;color:var(--mid);margin:8px 0">Pay safely with card or MoMo via Paystack</div>
+      <div style="font-size:26px;font-weight:800;color:var(--dark);margin:8px 0" id="ord-amount"></div>
+      <div style="font-size:12px;color:var(--muted)">Your payment is held securely until you confirm receipt</div>
+    </div>
+    <div class="esteps" style="margin-bottom:16px">
+      <h4>How escrow works:</h4>
+      <div class="estep"><div class="estep-n">1</div><div class="estep-t">Send MoMo to CampusMart — we hold it safely</div></div>
+      <div class="estep"><div class="estep-n">2</div><div class="estep-t">Seller drops off item at the agreed point</div></div>
+      <div class="estep"><div class="estep-n">3</div><div class="estep-t">You confirm receipt on your dashboard</div></div>
+      <div class="estep"><div class="estep-n">4</div><div class="estep-t">Payment released to seller — everyone wins!</div></div>
+    </div>
+    <button class="btn-main" id="btn-confirm-order" style="background:#16A34A">💳 Pay Now with Paystack →</button>
+    <button id="btn-cancel-order" style="width:100%;padding:12px;border:none;background:none;color:var(--muted);font-size:14px;cursor:pointer;margin-top:8px;font-family:'Plus Jakarta Sans',sans-serif">Cancel</button>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="ov" id="edit-ov">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="stitle">✏️ Edit Listing</div>
+    <input type="hidden" id="edit-id">
+    <input type="hidden" id="edit-type">
+    <div class="fg"><label class="fl">Item name *</label><input class="fi" id="edit-name" type="text"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Price (GHS) *</label><input class="fi" id="edit-price" type="number"></div>
+      <div class="fg"><label class="fl">Drop-off Point *</label><select class="fs" id="edit-drop"></select></div>
+    </div>
+    <div class="fg" id="edit-cond-row"><label class="fl">Condition</label>
+      <select class="fs" id="edit-cond"><option>New</option><option>Like New</option><option>Good</option><option>Fair</option></select>
+    </div>
+    <div class="fg" id="edit-vendor-row" style="display:none"><label class="fl">Vendor / Stall name</label><input class="fi" id="edit-vendor" type="text"></div>
+    <div class="fg" id="edit-hours-row" style="display:none"><label class="fl">Available hours</label><input class="fi" id="edit-hours" type="text"></div>
+    <div class="fg"><label class="fl">Description</label><textarea class="fta" id="edit-desc"></textarea></div>
+    <button class="btn-main" id="btn-save-edit" onclick="saveEdit()">Save Changes →</button>
+    <button onclick="closeOv('edit-ov')" style="width:100%;padding:12px;border:none;background:none;color:var(--muted);font-size:14px;cursor:pointer;margin-top:8px;font-family:'Plus Jakarta Sans',sans-serif">Cancel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════════════════
+  ALL JAVASCRIPT — plain script, no module issues
+═══════════════════════════════════════════════ -->
+<script>
+// ── CONFIG (swap these) ─────────────────────────────
+var FB_CONFIG = {
+  apiKey: "AIzaSyBZCgkkucbqAG7g2HSxsOjs7ZTv8yLCq6Q",
+  authDomain: "campusmart-2a5c7.firebaseapp.com",
+  projectId: "campusmart-2a5c7",
+  storageBucket: "campusmart-2a5c7.firebasestorage.app",
+  messagingSenderId: "459109449097",
+  appId: "1:459109449097:web:52e37f139aad019f843558"
+};
+var PAYSTACK_KEY = "pk_live_eb5ed73fe2001189938c1889ad4af12f6b9b5bfc";
+
+ // ← your MoMo number
+
+// ── CONSTANTS ────────────────────────────────────────
+var DROP_POINTS = [
+  "SRC Building Entrance","Main Library Steps","Casely Hayford Hall Gate",
+  "Science Complex Lobby","Student Centre","Great Hall Entrance",
+  "Commercial Area (Behind Valco)","Oguaa Hall Gate","ATL Hall Entrance","New Site Bus Stop"
+];
+var MCATS = ["Textbooks","Electronics","Clothing","Stationery","Services","Other"];
+var FCATS = ["Rice dishes","Soups & Stews","Snacks","Drinks","Pastries","Other"];
+var MEMOJI = {Textbooks:"📚",Electronics:"💻",Clothing:"👕",Stationery:"✏️",Services:"🛠️",Other:"📦"};
+var FEMOJI = {"Rice dishes":"🍱","Soups & Stews":"🍲",Snacks:"🍟",Drinks:"🥤",Pastries:"🥐",Other:"🍽️"};
+
+// ── SEED DATA ────────────────────────────────────────
+var SEED_M = [
+  {id:"s1",name:"Engineering Mathematics (5th Ed)",price:85,cat:"Textbooks",condition:"Good",seller:"Kwame A.",sellerUid:"seed",sellerHall:"Casely Hayford Hall",phone:"0241112233",description:"Slight highlighting on ch3-5.",dropPoint:"Main Library Steps",img:null,featured:true,ts:Date.now()-3600000},
+  {id:"s2",name:"HP Laptop Charger 65W",price:55,cat:"Electronics",condition:"Like New",seller:"Ama S.",sellerUid:"seed",sellerHall:"Oguaa Hall",phone:"0551234567",description:"Used 2 months. Fits most HP models.",dropPoint:"SRC Building Entrance",img:null,featured:false,ts:Date.now()-7200000},
+  {id:"s3",name:"Organic Chemistry (Atkins)",price:70,cat:"Textbooks",condition:"Fair",seller:"Kofi M.",sellerUid:"seed",sellerHall:"ATL Hall",phone:"0201234567",description:"Some wear but fully readable.",dropPoint:"Science Complex Lobby",img:null,featured:false,ts:Date.now()-5000000},
+  {id:"s4",name:"Scientific Calculator (Casio)",price:45,cat:"Electronics",condition:"Good",seller:"Nana B.",sellerUid:"seed",sellerHall:"Valco Hall",phone:"0551234588",description:"FX-991ES Plus. Works perfectly.",dropPoint:"Student Centre",img:null,featured:false,ts:Date.now()-2000000},
+  {id:"s5",name:"Assignment Typing Service",price:15,cat:"Services",condition:"New",seller:"Efua Typing",sellerUid:"seed",sellerHall:"Off-Campus",phone:"0241112244",description:"GHS 5/page. 24hr turnaround.",dropPoint:"Great Hall Entrance",img:null,featured:true,ts:Date.now()-900000},
+  {id:"s6",name:"UCC Hoodie (Size M)",price:60,cat:"Clothing",condition:"Like New",seller:"Adjoa K.",sellerUid:"seed",sellerHall:"Adehye Hall",phone:"0201119900",description:"Worn twice. Still has tag.",dropPoint:"Student Centre",img:null,featured:false,ts:Date.now()-400000},
+];
+var SEED_F = [
+  {id:"f1",name:"Jollof Rice & Chicken",price:20,cat:"Rice dishes",vendor:"Mama Ama's Kitchen",phone:"0271234567",hours:"Mon–Sat 11am–6pm",dropPoint:"SRC Building Entrance",description:"Best jollof on campus 🔥",img:null,sellerUid:"seed",ts:Date.now()-1800000},
+  {id:"f2",name:"Fufu & Light Soup",price:18,cat:"Soups & Stews",vendor:"Auntie Grace",phone:"0241009988",hours:"Mon–Fri 12pm–5pm",dropPoint:"Main Library Steps",description:"Authentic homestyle fufu.",img:null,sellerUid:"seed",ts:Date.now()-3000000},
+  {id:"f3",name:"Fresh Fruit Smoothie",price:12,cat:"Drinks",vendor:"Campus Blends",phone:"0201239900",hours:"Daily 8am–8pm",dropPoint:"Student Centre",description:"Mango, banana, pineapple.",img:null,sellerUid:"seed",ts:Date.now()-600000},
+  {id:"f4",name:"Meat Pie (2 pcs)",price:10,cat:"Pastries",vendor:"Golden Bakes",phone:"0551239911",hours:"Weekdays 7am–4pm",dropPoint:"Great Hall Entrance",description:"Freshly baked every morning.",img:null,sellerUid:"seed",ts:Date.now()-900000},
+];
+
+// ── STATE ────────────────────────────────────────────
+var currentUser    = null;
+var currentProfile = null;
+var currentMode    = "market";
+var currentCat     = "all";
+var searchQ        = "";
+var allMarket      = [];
+var allFood        = [];
+var activeOrderData = null;
+var fbAuth = null, fbDb = null;
+
+// ── UTILS ────────────────────────────────────────────
+function $(id){ return document.getElementById(id); }
+function toast(msg){
+  var t=$("toast"); t.textContent=msg; t.classList.add("show");
+  setTimeout(function(){t.classList.remove("show");},3200);
+}
+function timeAgo(ts){
+  if(!ts) return "";
+  var ms = typeof ts.toMillis==="function" ? ts.toMillis() : ts;
+  var m=Math.floor((Date.now()-ms)/60000);
+  if(m<1) return "just now";
+  if(m<60) return m+"m ago";
+  var h=Math.floor(m/60);
+  return h<24 ? h+"h ago" : Math.floor(h/24)+"d ago";
+}
+function inits(name){ return (name||"?").split(" ").map(function(w){return w[0];}).join("").toUpperCase().slice(0,2); }
+function waLink(phone,msg){ return "https://wa.me/"+phone.replace(/^0/,"233")+"?text="+encodeURIComponent(msg); }
+function openOv(id){ $(id).classList.add("open"); document.body.style.overflow="hidden"; }
+function closeOv(id){ $(id).classList.remove("open"); document.body.style.overflow=""; }
+
+// ── AUTH MODAL ───────────────────────────────────────
+function openAuthModal(tab){
+  $("f-login").style.display   = "none";
+  $("f-signup").style.display  = "none";
+  $("f-profile").style.display = "none";
+  $("auth-tabs").style.display = "flex";
+  if(tab==="profile"){
+    $("auth-tabs").style.display = "none";
+    $("f-profile").style.display = "block";
+    $("auth-title").textContent  = "Complete Your Profile ✏️";
+  } else {
+    showAuthTab(tab||"login");
+  }
+  openOv("auth-ov");
+}
+function showAuthTab(t){
+  $("atab-login").classList.toggle("active", t==="login");
+  $("atab-signup").classList.toggle("active", t==="signup");
+  $("f-login").style.display  = t==="login"  ? "block" : "none";
+  $("f-signup").style.display = t==="signup" ? "block" : "none";
+  $("f-profile").style.display = "none";
+  $("auth-tabs").style.display = "flex";
+  $("auth-title").textContent = t==="login" ? "Welcome back 👋" : "Join CampusMart 🎉";
+}
+
+// ── SIGN IN / UP ─────────────────────────────────────
+function doLogin(){
+  if(!fbAuth){ toast("⚠️ Firebase not connected yet. Swap in your config first."); return; }
+  var email=$("li-email").value.trim(), pass=$("li-pass").value.trim();
+  if(!email||!pass) return toast("⚠️ Enter email and password");
+  var btn=$("btn-login"); btn.textContent="Signing in…"; btn.disabled=true;
+  fbAuth.signInWithEmailAndPassword(email,pass)
+    .catch(function(e){ toast("❌ "+(e.code==="auth/invalid-credential"?"Wrong email or password":e.message)); btn.textContent="Sign In →"; btn.disabled=false; });
+}
+function doSignup(){
+  if(!fbAuth){ toast("⚠️ Firebase not connected yet. Swap in your config first."); return; }
+  var email=$("su-email").value.trim(), pass=$("su-pass").value.trim();
+  if(!email||!pass) return toast("⚠️ Fill all fields");
+  if(pass.length<6) return toast("⚠️ Password must be 6+ characters");
+  var btn=$("btn-signup"); btn.textContent="Creating…"; btn.disabled=true;
+  fbAuth.createUserWithEmailAndPassword(email,pass)
+    .catch(function(e){ toast("❌ "+e.message); btn.textContent="Create Account →"; btn.disabled=false; });
+}
+function saveProfile(){
+  if(!fbDb||!currentUser) return toast("⚠️ Firebase not ready");
+  var name=$("cp-name").value.trim(), sid=$("cp-sid").value.trim(),
+      hall=$("cp-hall").value, phone=$("cp-phone").value.trim(),
+      role=document.querySelector('input[name="cp-role"]:checked')?.value||"buyer";
+  if(!name||!sid||!hall||!phone) return toast("⚠️ Fill all fields");
+  if(!/^0[0-9]{9}$/.test(phone)) return toast("⚠️ Invalid Ghana phone number");
+  var btn=$("btn-saveprofile"); btn.textContent="Saving…"; btn.disabled=true;
+  var profile={name:name,studentId:sid,hall:hall,phone:phone,role:role,email:currentUser.email,uid:currentUser.uid};
+  fbDb.collection("users").doc(currentUser.uid).set(profile)
+    .then(function(){
+      currentProfile=profile;
+      // Send welcome email
+      emailjs.send("service_lgy8brb","template_mi5xgka",{
+        to_name: name,
+        to_email: currentUser.email,
+        role: role==="seller" ? "sell items and reach hundreds of students" : "buy items and order food safely"
+      }).catch(function(e){ console.warn("Email failed:",e); });
+      onSignedIn();
+      toast("✅ Welcome, "+name.split(" ")[0]+"!");
+    })
+    .catch(function(e){ toast("❌ "+e.message); btn.textContent="Save & Continue →"; btn.disabled=false; });
+}
+function doLogout(){
+  if(!fbAuth) return;
+  if(!confirm("Sign out?")) return;
+  fbAuth.signOut();
+}
+
+// ── SIGNED IN / OUT ──────────────────────────────────
+function onSignedIn(){
+  closeOv("auth-ov");
+  $("btn-auth").style.display = "none";
+  $("user-pill").style.display = "flex";
+  $("up-name").textContent = currentProfile.name.split(" ")[0];
+  $("up-role").textContent = currentProfile.role==="seller" ? "🛍️ Seller" : "🛒 Buyer";
+  subscribeListings();
+}
+function onSignedOut(){
+  $("btn-auth").style.display = "flex";
+  $("user-pill").style.display = "none";
+  switchPage("browse");
+  renderMarket();
+}
+
+// ── REALTIME LISTENERS ───────────────────────────────
+function subscribeListings(){
+  if(!fbDb) return;
+  fbDb.collection("listings").orderBy("createdAt","desc").onSnapshot(function(snap){
+    allMarket = snap.docs.map(function(d){ return Object.assign({id:d.id},d.data()); });
+    if(currentMode==="market") renderMarket();
+    updateStats();
+  });
+  fbDb.collection("food").orderBy("createdAt","desc").onSnapshot(function(snap){
+    allFood = snap.docs.map(function(d){ return Object.assign({id:d.id},d.data()); });
+    if(currentMode==="food") renderFood();
+    updateStats();
+  });
+}
+
+// ── MODE ─────────────────────────────────────────────
+function setMode(m){
+  currentMode=m; currentCat="all"; searchQ=""; $("app-search").value="";
+  $("tab-market").classList.toggle("active", m==="market");
+  $("tab-food").classList.toggle("active", m==="food");
+  $("vendor-banner").style.display = m==="food" ? "block" : "none";
+  if(m==="market"){ $("hero-h").innerHTML='Buy & Sell<br><em>on campus</em>'; $("hero-p").textContent="UCC's student marketplace — books, gadgets & more"; }
+  else { $("hero-h").innerHTML='Campus<br><em class="food">Food</em>'; $("hero-p").textContent="Order from student vendors right here on UCC campus"; }
+  buildCats(); m==="market" ? renderMarket() : renderFood();
+}
+
+// ── CATS ─────────────────────────────────────────────
+function buildCats(){
+  var cats=["all"].concat(currentMode==="market"?MCATS:FCATS);
+  var isFood=currentMode==="food";
+  $("cats-row").innerHTML=cats.map(function(c){
+    return '<div class="cat '+(c===currentCat?"active ":"")+(isFood?"food":"")+'" data-cat="'+c+'">'+(c==="all"?"🏪 All":c)+'</div>';
+  }).join("");
+  $("cats-row").querySelectorAll(".cat").forEach(function(el){
+    el.addEventListener("click",function(){
+      currentCat=el.dataset.cat;
+      $("cats-row").querySelectorAll(".cat").forEach(function(c){c.classList.remove("active");});
+      el.classList.add("active");
+      currentMode==="market"?renderMarket():renderFood();
+    });
+  });
+}
+
+// ── RENDER ───────────────────────────────────────────
+function filtered(list, catKey){
+  return list.filter(function(l){
+    var mc=currentCat==="all"||l[catKey]===currentCat;
+    var ms=!searchQ||l.name.toLowerCase().includes(searchQ)||(l.seller||l.vendor||"").toLowerCase().includes(searchQ);
+    return mc&&ms;
+  });
+}
+function renderMarket(){
+  var src=allMarket.length?allMarket:SEED_M;
+  var list=filtered(src,"cat");
+  var feat=list.filter(function(l){return l.featured;});
+  var reg=list.filter(function(l){return !l.featured;});
+  $("feat-section").style.display=feat.length?"block":"none";
+  $("feat-grid").innerHTML=feat.map(mCard).join("");
+  $("grid-title").textContent="All Listings";
+  $("grid-count").textContent=reg.length+" items";
+  $("main-grid").innerHTML=reg.length?reg.map(mCard).join(""):emptyHTML("📦","No listings found","Try a different category");
+}
+function renderFood(){
+  var src=allFood.length?allFood:SEED_F;
+  var list=filtered(src,"cat");
+  $("feat-section").style.display="none";
+  $("grid-title").textContent="Food on Campus";
+  $("grid-count").textContent=list.length+" items";
+  $("main-grid").innerHTML=list.length?list.map(fCard).join(""):emptyHTML("🍱","No food listings","Be the first vendor!");
+}
+function updateStats(){
+  $("s-items").textContent=allMarket.length||SEED_M.length;
+  $("s-sellers").textContent=[...new Set((allMarket.length?allMarket:SEED_M).map(function(l){return l.sellerUid;}))].length;
+  $("s-foods").textContent=allFood.length||SEED_F.length;
+}
+function mCard(l){
+  var em=MEMOJI[l.cat]||"📦";
+  var img=l.img?'<img src="'+l.img+'" alt="">':'<span>'+em+'</span>';
+  return '<div class="mcard'+(l.featured?" feat":"")+'" data-id="'+l.id+'" data-type="m">'+
+    '<div class="mcard-img">'+img+'</div>'+
+    (l.featured?'<span class="bfeat">⭐ Featured</span>':'')+
+    '<span class="bcond">'+l.condition+'</span>'+
+    '<div class="mcard-body"><div class="mprice">GHS '+l.price+'</div><div class="mname">'+l.name+'</div><div class="mmeta">👤 '+l.seller+' · 📍 '+(l.dropPoint||"")+'</div></div></div>';
+}
+function fCard(l){
+  var em=FEMOJI[l.cat]||"🍽️";
+  var img=l.img?'<img src="'+l.img+'" alt="">':'<span>'+em+'</span>';
+  return '<div class="fcard" data-id="'+l.id+'" data-type="f">'+
+    '<div class="fcard-img">'+img+'</div>'+
+    '<div class="fcard-body"><div class="fvendor">'+l.vendor+'</div><div class="fname">'+l.name+'</div><div class="fprice">GHS '+l.price+'</div><div class="favail">⏰ '+(l.hours||"Hours vary")+' · 📍 '+(l.dropPoint||"")+'</div></div></div>';
+}
+function emptyHTML(icon,h,p){
+  return '<div class="empty"><div class="ei">'+icon+'</div><h3>'+h+'</h3><p>'+p+'</p></div>';
+}
+
+// ── DETAIL ───────────────────────────────────────────
+function openDetail(type, id){
+  var src=type==="m"?(allMarket.length?allMarket:SEED_M):(allFood.length?allFood:SEED_F);
+  var l=src.find(function(x){return x.id===id;}); if(!l) return;
+  var isFood=type==="f";
+  var em=isFood?(FEMOJI[l.cat]||"🍽️"):(MEMOJI[l.cat]||"📦");
+  var imgHTML=l.img?'<img src="'+l.img+'" alt="" style="width:100%;height:100%;object-fit:cover">':"<span style='font-size:72px'>"+em+"</span>";
+  var sname=isFood?l.vendor:l.seller;
+  var isMine=currentUser&&l.sellerUid===currentUser.uid;
+  var isSeed=l.sellerUid==="seed";
+  var ts=l.ts||l.createdAt;
+
+  var actionsHTML="";
+  if(isMine&&!isSeed){
+    actionsHTML='<div class="mine-actions">'+
+      '<button class="btn-del" onclick="deleteListing(\''+type+'\',\''+id+'\')">🗑️ Delete</button>'+
+      '<button class="btn-edit" onclick="openEdit(\''+type+'\',\''+id+'\')">✏️ Edit</button>'+
+      (!l.featured?'<button class="btn-feat" onclick="requestFeature(\''+id+'\')">⭐ Featured</button>':"")+
+      '</div>';
+  } else if(!isSeed){
+    var orderBtn=(!currentUser)
+      ? '<button class="btn-order" onclick="closeOv(\'det-ov\');openAuthModal(\'login\')">🔒 Sign in to Order</button>'
+      : '<button class="btn-order" onclick="startOrder(\''+type+'\',\''+id+'\')">🛒 Place Order (Escrow)</button>';
+    actionsHTML='<div style="display:flex;flex-direction:column;gap:10px">'+orderBtn+'<a class="btn-wa" href="'+waLink(l.phone,'Hi '+sname+'! I saw "'+l.name+'" on CampusMart (GHS '+l.price+'). Is it available?')+'" target="_blank"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>'+(isFood?"Order via WhatsApp":"Chat on WhatsApp")+"</a></div>";
+  } else {
+    actionsHTML='<a class="btn-wa" href="'+waLink(l.phone,'Hi '+sname+'! I saw "'+l.name+'" on CampusMart. Is it available?')+'" target="_blank">Chat on WhatsApp</a>';
+  }
+
+  $("det-content").innerHTML=
+    '<div class="dimg">'+imgHTML+'</div>'+
+    '<div class="dbody">'+
+      '<div class="dprice'+(isFood?" food":"")+'">GHS '+l.price+'</div>'+
+      '<div class="dname">'+l.name+'</div>'+
+      '<div class="dtags">'+
+        '<span class="tag">'+l.cat+'</span>'+
+        (!isFood?'<span class="tag">'+l.condition+'</span>':"")+
+        (l.dropPoint?'<span class="tag">📍 '+l.dropPoint+'</span>':"")+
+        (isFood&&l.hours?'<span class="tag">⏰ '+l.hours+'</span>':"")+
+        (l.featured?'<span class="tag feat">⭐ Featured</span>':"")+
+      '</div>'+
+      (l.description?'<p class="ddesc">'+l.description+'</p>':"")+
+      '<div class="srow"><div class="av'+(isFood?" food":"")+'">'+inits(sname)+'</div><div><div class="av-name">'+sname+'</div><div class="av-sub">📍 '+(l.sellerHall||"UCC Campus")+' · '+timeAgo(ts)+'</div></div></div>'+
+      actionsHTML+
+    '</div>';
+  openOv("det-ov");
+}
+
+// ── ORDER ────────────────────────────────────────────
+function startOrder(type, id){
+  var src = type==="m"
+    ? (allMarket.length ? allMarket : SEED_M)
+    : (allFood.length ? allFood : SEED_F);
+  var l=src.find(function(x){return x.id===id;});
+  if(!l){ toast("⚠️ Listing not found"); return; }
+  if(!currentUser){ closeOv("det-ov"); openAuthModal("login"); return; }
+  var commission=Math.ceil(l.price*0.10);
+  var total=l.price+commission;
+  activeOrderData={l:l,id:id,type:type,commission:commission,total:total};
+  $("ord-item").textContent=l.name;
+  $("ord-price").textContent="GHS "+l.price;
+  $("ord-commission").textContent="GHS "+commission+" (10% service fee)";
+  $("ord-total").textContent="GHS "+total;
+  $("ord-drop").textContent=l.dropPoint||"To be agreed";
+  $("ord-amount").textContent="GHS "+total;
+  $("ord-ref").textContent="CM-"+id.slice(-6).toUpperCase();
+  closeOv("det-ov"); openOv("order-ov");
+}
+function confirmOrder(){
+  if(!fbDb||!currentUser) return toast("⚠️ Not signed in");
+  var d=activeOrderData; if(!d) return;
+  var ref="CM-"+d.id.slice(-6).toUpperCase();
+
+  // Open Paystack payment popup
+  var handler = PaystackPop.setup({
+    key: PAYSTACK_KEY,
+    email: currentUser.email,
+    amount: d.total * 100, // Paystack uses pesewas (multiply by 100)
+    currency: "GHS",
+    ref: ref,
+    metadata: {
+      listingId: d.id,
+      listingName: d.l.name,
+      buyerName: currentProfile.name,
+      sellerName: d.l.seller||d.l.vendor,
+      dropPoint: d.l.dropPoint||""
+    },
+    callback: function(response) {
+      // Payment successful — save order to Firebase
+      var btn=$("btn-confirm-order"); btn.textContent="Saving order…"; btn.disabled=true;
+      fbDb.collection("orders").add({
+        listingId:d.id, listingType:d.type, listingName:d.l.name, price:d.l.price,
+        commission:d.commission, total:d.total,
+        paystackRef: response.reference,
+        dropPoint:d.l.dropPoint||"", buyerUid:currentUser.uid, buyerName:currentProfile.name,
+        buyerPhone:currentProfile.phone, sellerUid:d.l.sellerUid, sellerName:d.l.seller||d.l.vendor,
+        sellerPhone:d.l.phone, status:"paid",
+        ref:ref, createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function(){
+        closeOv("order-ov");
+        toast("✅ Payment successful! Order placed.");
+
+        // Email confirmation to buyer
+        emailjs.send("service_lgy8brb","template_qm25xve",{
+          to_name: currentProfile.name,
+          to_email: currentUser.email,
+          item_name: d.l.name,
+          amount: "GHS "+d.total,
+          drop_point: d.l.dropPoint||"To be agreed",
+          ref: ref
+        }).catch(function(e){ console.warn("Email failed:",e); });
+
+        // WhatsApp to seller — show message then redirect
+        var sellerMsg="Hi "+(d.l.seller||d.l.vendor)+"! 🛒 You have a new PAID order on CampusMart!\n\n*Item:* "+d.l.name+"\n*Buyer:* "+currentProfile.name+"\n*Amount:* GHS "+d.l.price+"\n*Drop-off:* "+(d.l.dropPoint||"TBD")+"\n*Ref:* "+ref+"\n\n💰 Payment received and held in escrow. Please drop off the item at the agreed point.\n\nTrack on: ucccampusmart.netlify.app";
+        var sellerWa="https://wa.me/"+(d.l.phone||"").replace(/^0/,"233")+"?text="+encodeURIComponent(sellerMsg);
+
+        // Show notify button instead of auto-opening (more reliable on mobile)
+        $("dash-orders").innerHTML='<div class="dcard" style="border:2px solid var(--food)">'+
+          '<div class="dcname">✅ Order placed!</div>'+
+          '<div class="dcsub" style="margin:6px 0">'+d.l.name+' · Ref: '+ref+'</div>'+
+          '<a href="'+sellerWa+'" target="_blank" class="btn-wa" style="margin-top:10px;font-size:14px">📲 Tap to notify seller on WhatsApp</a>'+
+          '</div>';
+
+        switchPage("dash");
+        loadDashboard();
+      }).catch(function(e){ toast("❌ "+e.message); btn.textContent="Pay Now →"; btn.disabled=false; });
+    },
+    onClose: function() {
+      toast("Payment cancelled.");
+    }
+  });
+  handler.openIframe();
+}
+
+// ── POST ─────────────────────────────────────────────
+function openPost(){
+  if(!currentUser) return openAuthModal("login");
+  if(currentProfile&&currentProfile.role==="buyer") return toast("⚠️ Only sellers can post listings.");
+  $("m-drop").innerHTML='<option value="">Select…</option>'+DROP_POINTS.map(function(p){return "<option>"+p+"</option>";}).join("");
+  $("f-drop").innerHTML='<option value="">Select…</option>'+DROP_POINTS.map(function(p){return "<option>"+p+"</option>";}).join("");
+  setPostType("market"); openOv("post-ov");
+}
+function setPostType(t){
+  $("pt-market").classList.toggle("active",t==="market");
+  $("pt-food").classList.toggle("active",t==="food");
+  $("f-market").style.display=t==="market"?"block":"none";
+  $("f-food").style.display=t==="food"?"block":"none";
+  $("post-title").textContent=t==="market"?"Post a Listing":"Post Food Item";
+}
+function postMarket(){
+  if(!fbDb) return toast("⚠️ Firebase not connected");
+  var name=$("m-name").value.trim(), price=parseFloat($("m-price").value),
+      cat=$("m-cat").value, cond=$("m-cond").value, drop=$("m-drop").value, desc=$("m-desc").value.trim();
+  var imgEl=$("img-prev");
+  if(!name||!price||!cat||!drop) return toast("⚠️ Fill all required fields");
+  var btn=$("btn-post-market"); btn.textContent="Posting…"; btn.disabled=true;
+  fbDb.collection("listings").add({
+    name:name,price:price,cat:cat,condition:cond,dropPoint:drop,description:desc,
+    seller:currentProfile.name,sellerUid:currentUser.uid,sellerHall:currentProfile.hall,phone:currentProfile.phone,
+    img:imgEl.style.display!=="none"?imgEl.src:null,featured:false,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function(){ closeOv("post-ov"); toast("✅ Listing posted!"); })
+  .catch(function(e){ toast("❌ "+e.message); })
+  .finally(function(){ btn.textContent="Post Listing →"; btn.disabled=false; });
+}
+function postFood(){
+  if(!fbDb) return toast("⚠️ Firebase not connected");
+  var name=$("f-name").value.trim(), price=parseFloat($("f-price").value),
+      cat=$("f-cat").value, vendor=$("f-vendor").value.trim(),
+      hours=$("f-hours").value.trim(), drop=$("f-drop").value, desc=$("f-desc").value.trim();
+  var imgEl=$("fimg-prev");
+  if(!name||!price||!vendor||!drop) return toast("⚠️ Fill all required fields");
+  var btn=$("btn-post-food"); btn.textContent="Posting…"; btn.disabled=true;
+  fbDb.collection("food").add({
+    name:name,price:price,cat:cat,vendor:vendor,hours:hours,dropPoint:drop,description:desc,
+    sellerUid:currentUser.uid,phone:currentProfile.phone,
+    img:imgEl.style.display!=="none"?imgEl.src:null,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function(){ closeOv("post-ov"); toast("✅ Food item posted!"); })
+  .catch(function(e){ toast("❌ "+e.message); })
+  .finally(function(){ btn.textContent="Post Food Item →"; btn.disabled=false; });
+}
+
+// ── EDIT LISTING ─────────────────────────────────────
+function openEdit(type, id){
+  var src=type==="m"?allMarket:allFood;
+  var l=src.find(function(x){return x.id===id;}); if(!l) return;
+  var isFood=type==="f";
+
+  $("edit-id").value=id;
+  $("edit-type").value=type;
+  $("edit-name").value=l.name;
+  $("edit-price").value=l.price;
+  $("edit-desc").value=l.description||"";
+
+  // Build drop-off options
+  var dpOpts='<option value="">Select…</option>'+DROP_POINTS.map(function(p){
+    return '<option'+(l.dropPoint===p?' selected':'')+'>'+p+'</option>';
+  }).join("");
+  $("edit-drop").innerHTML=dpOpts;
+
+  if(isFood){
+    $("edit-cond-row").style.display="none";
+    $("edit-vendor-row").style.display="block";
+    $("edit-vendor").value=l.vendor||"";
+    $("edit-hours-row").style.display="block";
+    $("edit-hours").value=l.hours||"";
+  } else {
+    $("edit-cond-row").style.display="block";
+    $("edit-vendor-row").style.display="none";
+    $("edit-hours-row").style.display="none";
+    $("edit-cond").value=l.condition||"Good";
+  }
+
+  closeOv("det-ov");
+  openOv("edit-ov");
+}
+
+function saveEdit(){
+  if(!fbDb) return toast("⚠️ Firebase not connected");
+  var id=$("edit-id").value;
+  var type=$("edit-type").value;
+  var name=$("edit-name").value.trim();
+  var price=parseFloat($("edit-price").value);
+  var drop=$("edit-drop").value;
+  var desc=$("edit-desc").value.trim();
+  if(!name||!price||!drop) return toast("⚠️ Fill all required fields");
+
+  var updates={name:name, price:price, dropPoint:drop, description:desc};
+  if(type==="m"){
+    updates.condition=$("edit-cond").value;
+  } else {
+    updates.vendor=$("edit-vendor").value.trim();
+    updates.hours=$("edit-hours").value.trim();
+  }
+
+  var btn=$("btn-save-edit"); btn.textContent="Saving…"; btn.disabled=true;
+  var col=type==="m"?"listings":"food";
+  fbDb.collection(col).doc(id).update(updates)
+    .then(function(){ closeOv("edit-ov"); toast("✅ Listing updated!"); })
+    .catch(function(e){ toast("❌ "+e.message); })
+    .finally(function(){ btn.textContent="Save Changes →"; btn.disabled=false; });
+}
+
+// ── DELETE ───────────────────────────────────────────
+function deleteListing(type,id){
+  if(!fbDb) return;
+  if(!confirm("Delete this listing?")) return;
+  fbDb.collection(type==="m"?"listings":"food").doc(id).delete()
+    .then(function(){ closeOv("det-ov"); toast("🗑️ Deleted"); })
+    .catch(function(e){ toast("❌ "+e.message); });
+}
+function requestFeature(id){
+  window.open(waLink(ESCROW_MOMO,"Hi! I want to feature listing CM-"+id.slice(-6).toUpperCase()+" on CampusMart."),"_blank");
+}
+
+// ── DASHBOARD ────────────────────────────────────────
+function loadDashboard(){
+  if(!currentUser||!fbDb){ $("dash-orders").innerHTML='<p class="ltxt">Sign in to see your orders</p>'; return; }
+  $("dash-orders").innerHTML=$("dash-listings").innerHTML='<p class="ltxt">Loading…</p>';
+  var stLabel=function(s){return {payment_pending:"⏳ Awaiting Payment",paid:"💰 Paid",dropped_off:"📦 Dropped Off",completed:"✅ Completed",disputed:"⚠️ Disputed"}[s]||s;};
+  fbDb.collection("orders").where("buyerUid","==",currentUser.uid).get()
+    .then(function(snap){
+      var orders=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+      orders.sort(function(a,b){ return (b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0); });
+      $("dash-orders").innerHTML=orders.length?orders.map(function(o){
+        return '<div class="dcard"><div class="dctop"><div><div class="dcname">'+o.listingName+'</div><div class="dcsub">📍 '+(o.dropPoint||"TBD")+' · '+o.ref+'</div></div><div class="dcprice">GHS '+(o.total||o.price)+'</div></div>'+
+          '<div class="dcst '+o.status+'">'+stLabel(o.status)+'</div>'+
+          (o.status==="dropped_off"?'<button class="btn-recv" onclick="confirmReceipt(\''+o.id+'\')">✅ Confirm Receipt</button>':"")+
+          (o.status==="payment_pending"?'<button class="btn-disp" onclick="raiseDispute(\''+o.id+'\')">⚠️ Raise Dispute</button>':"")+
+          '</div>';
+      }).join(""):'<p class="edash">No orders yet.</p>';
+    }).catch(function(e){ $("dash-orders").innerHTML='<p class="edash">Error loading orders: '+e.message+'</p>'; });
+  var mine=allMarket.filter(function(l){return l.sellerUid===currentUser.uid;});
+  var mineF=allFood.filter(function(l){return l.sellerUid===currentUser.uid;});
+  fbDb.collection("orders").where("sellerUid","==",currentUser.uid).get()
+    .then(function(snap){
+      var sales=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+      sales.sort(function(a,b){ return (b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0); });
+      $("dash-listings").innerHTML=
+        (mine.concat(mineF).map(function(l){
+          return '<div class="dcard"><div class="dctop"><div><div class="dcname">'+l.name+'</div><div class="dcsub">📍 '+(l.dropPoint||"")+'·GHS '+l.price+'</div></div><button class="btn-del-sm" onclick="deleteListing(\''+(l.vendor?'f':'m')+'\',\''+l.id+'\')">🗑️</button></div></div>';
+        }).join(""))||""+
+        (sales.length?'<div class="dc-section">Incoming Orders</div>'+sales.map(function(o){
+          return '<div class="dcard"><div class="dctop"><div><div class="dcname">'+o.listingName+'</div><div class="dcsub">👤 '+o.buyerName+' · 📍 '+(o.dropPoint||"TBD")+'</div></div><div class="dcprice">GHS '+o.price+'</div></div>'+
+            '<div class="dcst '+o.status+'">'+stLabel(o.status)+'</div>'+
+            (o.status==="payment_pending"?'<button class="btn-drop" onclick="confirmDropoff(\''+o.id+'\')">📦 Confirm Drop-off</button>':"")+
+            '</div>';
+        }).join(""):'')
+        ||'<p class="edash">No listings or sales yet.</p>';
+    });
+}
+function confirmDropoff(id){
+  if(!confirm("Confirm you have dropped off the item?")) return;
+  fbDb.collection("orders").doc(id).get().then(function(snap){
+    var o=snap.data();
+    fbDb.collection("orders").doc(id).update({status:"dropped_off"}).then(function(){
+      toast("📦 Drop-off confirmed!");
+      // Notify buyer via WhatsApp
+      var msg="Hi "+o.buyerName+"! 📦 Good news — "+o.sellerName+" has dropped off *"+o.listingName+"* at *"+o.dropPoint+"*.\n\nPlease pick it up and confirm receipt on CampusMart (ucccampusmart.netlify.app) to release payment.\n\nRef: "+o.ref;
+      window.open("https://wa.me/"+o.buyerPhone.replace(/^0/,"233")+"?text="+encodeURIComponent(msg),"_blank");
+      loadDashboard();
+    });
+  });
+}
+function confirmReceipt(id){
+  if(!confirm("Confirm you received the item? This releases payment to the seller.")) return;
+  fbDb.collection("orders").doc(id).get().then(function(snap){
+    var o=snap.data();
+    fbDb.collection("orders").doc(id).update({status:"completed"}).then(function(){
+      toast("✅ Payment released to seller!");
+      // Notify seller via WhatsApp
+      var msg="Hi "+o.sellerName+"! ✅ Great news — "+o.buyerName+" has confirmed receipt of *"+o.listingName+"*.\n\nYour payment of *GHS "+o.price+"* has been released. Please check your MoMo.\n\nThank you for selling on CampusMart! 🎉";
+      window.open("https://wa.me/"+o.sellerPhone.replace(/^0/,"233")+"?text="+encodeURIComponent(msg),"_blank");
+      loadDashboard();
+    });
+  });
+}
+function raiseDispute(id){
+  var r=prompt("Describe the issue:"); if(!r) return;
+  fbDb.collection("orders").doc(id).get().then(function(snap){
+    var o=snap.data();
+    fbDb.collection("orders").doc(id).update({status:"disputed",disputeReason:r}).then(function(){
+      toast("⚠️ Dispute raised.");
+      // Notify CampusMart admin via WhatsApp
+      var msg="⚠️ *DISPUTE RAISED*\n\nOrder: "+o.ref+"\nItem: "+o.listingName+"\nBuyer: "+o.buyerName+" ("+o.buyerPhone+")\nSeller: "+o.sellerName+" ("+o.sellerPhone+")\nAmount: GHS "+o.price+"\n\nReason: "+r+"\n\nPlease resolve this dispute.";
+      window.open("https://wa.me/"+("0534693380").replace(/^0/,"233")+"?text="+encodeURIComponent(msg),"_blank");
+      loadDashboard();
+    });
+  });
+}
+
+// ── PAGE NAV ─────────────────────────────────────────
+function switchPage(p){
+  document.querySelectorAll(".page").forEach(function(el){el.classList.remove("active");});
+  document.querySelectorAll(".bnav-btn").forEach(function(el){el.classList.remove("active");});
+  $("ap-"+p).classList.add("active");
+  $("bnav-"+p).classList.add("active");
+  if(p==="dash"){ if(!currentUser) return openAuthModal("login"); loadDashboard(); }
+}
+
+// ── WIRE UP LISTENERS ────────────────────────────────
+document.addEventListener("DOMContentLoaded", function(){
+  buildCats(); renderMarket(); updateStats();
+
+  // Auth button
+  $("btn-auth").addEventListener("click", function(){ openAuthModal("login"); });
+  $("atab-login").addEventListener("click", function(){ showAuthTab("login"); });
+  $("atab-signup").addEventListener("click", function(){ showAuthTab("signup"); });
+  $("go-signup").addEventListener("click", function(){ showAuthTab("signup"); });
+  $("go-login").addEventListener("click", function(){ showAuthTab("login"); });
+  $("btn-login").addEventListener("click", doLogin);
+  $("btn-signup").addEventListener("click", doSignup);
+  $("btn-saveprofile").addEventListener("click", saveProfile);
+  $("auth-ov").addEventListener("click", function(e){ if(e.target===$("auth-ov")) closeOv("auth-ov"); });
+
+  // User pill
+  $("btn-post-top").addEventListener("click", openPost);
+  $("btn-logout").addEventListener("click", doLogout);
+
+  // Mode tabs
+  $("tab-market").addEventListener("click", function(){ setMode("market"); });
+  $("tab-food").addEventListener("click", function(){ setMode("food"); });
+
+  // Post
+  $("bnav-post").addEventListener("click", openPost);
+  $("btn-vendor").addEventListener("click", openPost);
+  $("pt-market").addEventListener("click", function(){ setPostType("market"); });
+  $("pt-food").addEventListener("click", function(){ setPostType("food"); });
+  $("m-photo-drop").addEventListener("click", function(){ $("m-img").click(); });
+  $("f-photo-drop").addEventListener("click", function(){ $("f-img").click(); });
+  $("m-img").addEventListener("change", function(){ previewImg(this,"img-prev"); });
+  $("f-img").addEventListener("change", function(){ previewImg(this,"fimg-prev"); });
+  $("btn-post-market").addEventListener("click", postMarket);
+  $("btn-post-food").addEventListener("click", postFood);
+  $("post-ov").addEventListener("click", function(e){ if(e.target===$("post-ov")) closeOv("post-ov"); });
+
+  // Detail
+  $("btn-close-det").addEventListener("click", function(){ closeOv("det-ov"); });
+  $("det-ov").addEventListener("click", function(e){ if(e.target===$("det-ov")) closeOv("det-ov"); });
+  ["feat-grid","main-grid"].forEach(function(gid){
+    $(gid).addEventListener("click", function(e){
+      var card=e.target.closest("[data-id]"); if(!card) return;
+      openDetail(card.dataset.type, card.dataset.id);
+    });
+  });
+
+  // Order
+  $("btn-confirm-order").addEventListener("click", confirmOrder);
+  $("btn-cancel-order").addEventListener("click", function(){ closeOv("order-ov"); });
+  $("order-ov").addEventListener("click", function(e){ if(e.target===$("order-ov")) closeOv("order-ov"); });
+
+  // Bottom nav
+  $("bnav-browse").addEventListener("click", function(){ switchPage("browse"); });
+  $("bnav-dash").addEventListener("click", function(){ switchPage("dash"); });
+
+  // Search
+  $("app-search").addEventListener("input", function(){
+    searchQ=$("app-search").value.toLowerCase().trim();
+    currentMode==="market"?renderMarket():renderFood();
+  });
+});
+
+function previewImg(input, pid){
+  var f=input.files[0]; if(!f) return;
+  var r=new FileReader();
+  r.onload=function(e){ var el=$(pid); el.src=e.target.result; el.style.display="block"; };
+  r.readAsDataURL(f);
+}
+</script>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>emailjs.init("GyXyTbgGbriUC6lgl");</script>
+
+<!-- Paystack SDK -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+// Firebase SDKs are now loaded — init immediately
+try {
+  firebase.initializeApp(FB_CONFIG);
+  fbAuth = firebase.auth();
+  fbDb   = firebase.firestore();
+  fbAuth.onAuthStateChanged(function(user){
+    currentUser = user;
+    if(user){
+      fbDb.collection("users").doc(user.uid).get().then(function(snap){
+        if(snap.exists){ currentProfile=snap.data(); onSignedIn(); }
+        else { openAuthModal("profile"); }
+      });
+    } else {
+      currentProfile=null;
+      onSignedOut();
+    }
+  });
+} catch(e){
+  console.error("Firebase init error:", e);
+}
+</script>
+</body>
+</html>
